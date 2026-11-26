@@ -41,7 +41,7 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 The save contains **two persons**: the **Android** (14 limbs) and the **base human** (14 limbs, intentionally left with only torso+head alive — the destroyed limbs are part of the design).
 
 **All parts (both persons + machinery)**
-- `Deletable = false` ×42 — black holes and the Decimator can no longer delete anything
+- `Deletable` left **true** ×42 (reverted per user request — manual deletion works; note black holes/Decimator can delete again)
 - `Disintegratable = false` ×42 — disintegration weapons no longer work on anything
 - Non-limb parts charge-proofed: `ConductOverride=false`, `ChargeBurns=false`, `ForceNoCharge=true`, `ForceNoChargeParticles=true` (all 42 parts now fully charge-proof)
 
