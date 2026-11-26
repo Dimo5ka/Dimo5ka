@@ -40,6 +40,17 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 
 **Laser Pointer exception:** the Laser Pointer (inside the head) needs to hold and conduct charge to function, so its four electricity flags were reverted to the original values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`, `ForceNoChargeParticles=false`. All other parts keep their electricity immunity. Note: the **Generator** still has `ForceNoCharge=true` — if the laser is powered through it and won't fire, that flag can be reverted the same way.
 
+## Changes made — round 7 (5 bytes, file length unchanged)
+
+**Generator: power restored + visuals tamed.** The laser needs the Generator to hold and conduct charge, so its electricity flags were reverted to the original save's values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`. (`ForceNoChargeParticles` was already `true` in the original save — the spark particles were never active on it.)
+
+On top of that, two child components of the Generator were disabled via their `enabled` flags:
+- `UnityEngine.ParticleSystem` → `enabled = false` — this is the charge-scaling particle emitter, so the generator's charge particles are off
+- `P1/SpriteLightFlash` → `enabled = false` — this is the glow/light-flash component, so the glow is off
+- The `P1/P2` power-terminal component was deliberately **left enabled** so the generator keeps delivering power
+
+**Base human: still 100% byte-untouched** (all round-7 edits sit well before the human's data region).
+
 ## Changes made — round 5 (current, 108 edits, 226,082 → 226,084 bytes)
 
 Rebuilt from the re-sent working save after v3 misbehaved. **Root cause identified:** v3 set `Disintegratable=false` (and originally `Deletable=false`) on ALL 42 parts — including the base human's limbs. Those flags gate the game's crush/disintegrate pathway ("setting it to false will also prevent the object from being disintegrated or crushed"), which interfered with the human's intentionally-destroyed limbs.
