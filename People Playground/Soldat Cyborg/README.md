@@ -36,7 +36,29 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 - `InternalBleedingIntensity` zeroed (4 non-zero values), `BleedingPointCount 1 → 0`, `stabWoundCount 1 → 0`
 - `ShockLevel` / `PainLevel` confirmed 0.0; no poison-susceptibility fields exist in this save format
 
-## Changes made — round 3 (164 edits, person-scoped, 226,082 → 226,084 bytes)
+## Changes made — round 5 (current, 108 edits, 226,082 → 226,084 bytes)
+
+Rebuilt from the re-sent working save after v3 misbehaved. **Root cause identified:** v3 set `Disintegratable=false` (and originally `Deletable=false`) on ALL 42 parts — including the base human's limbs. Those flags gate the game's crush/disintegrate pathway ("setting it to false will also prevent the object from being disintegrated or crushed"), which interfered with the human's intentionally-destroyed limbs.
+
+**All parts:**
+- `Deletable` left **true** everywhere (per request — manual deletion works)
+
+**Android limbs (14) + machinery (14 parts) only:**
+- `Disintegratable = false` — disintegration/crush immunity, scoped AWAY from the human
+
+**Machinery only (14 parts):**
+- `ConductOverride=false`, `ChargeBurns=false`, `ForceNoCharge=true`, `ForceNoChargeParticles=true`
+
+**Android limbs only:**
+- All 14 `BreakingThreshold` → 64450.0 (dismemberment disabled)
+- `ShatteredObjectChance` → 0.0 ×14; `IsLethalToBreak` → false ×4
+- Verified natively clean: `Broken`/`IsDismembered`/`Braindead`/`BrainDamaged` false, all wound counters 0
+
+**Base human: 100% untouched — byte-verified.** The last modified byte in the file lies *before* the human's data region begins; the human's 7 destroyed (`Broken=true`) limbs, its wounds, and its original thresholds are exactly as uploaded. Round 1's fixes (ImmuneToDamage ×56, Indestructible ×9 machinery, Waterproof ×9) remain in effect.
+
+## Earlier rounds (superseded by round 5, kept for history)
+
+## Round 3 (164 edits, person-scoped, 226,082 → 226,084 bytes)
 
 The save contains **two persons**: the **Android** (14 limbs) and the **base human** (14 limbs, intentionally left with only torso+head alive — the destroyed limbs are part of the design).
 
