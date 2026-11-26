@@ -36,6 +36,27 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 - `InternalBleedingIntensity` zeroed (4 non-zero values), `BleedingPointCount 1 → 0`, `stabWoundCount 1 → 0`
 - `ShockLevel` / `PainLevel` confirmed 0.0; no poison-susceptibility fields exist in this save format
 
+## Changes made — round 3 (164 edits, person-scoped, 226,082 → 226,084 bytes)
+
+The save contains **two persons**: the **Android** (14 limbs) and the **base human** (14 limbs, intentionally left with only torso+head alive — the destroyed limbs are part of the design).
+
+**All parts (both persons + machinery)**
+- `Deletable = false` ×42 — black holes and the Decimator can no longer delete anything
+- `Disintegratable = false` ×42 — disintegration weapons no longer work on anything
+- Non-limb parts charge-proofed: `ConductOverride=false`, `ChargeBurns=false`, `ForceNoCharge=true`, `ForceNoChargeParticles=true` (all 42 parts now fully charge-proof)
+
+**Android only**
+- All 14 `BreakingThreshold` values → **64450.0** (10 retargeted + one 4.0 inline threshold patched — that limb would have snapped instantly)
+- `ShatteredObjectChance` 0.1 → 0.0 on all 14 Android limbs
+- `IsLethalToBreak` true→false ×4 (breaking an Android limb can no longer kill)
+- Verified natively clean: `Broken`, `IsDismembered`, `Braindead`, `BrainDamaged` all false; stab/bleeding counters all 0
+
+**Base human — intentionally untouched**
+- `Broken=true` on the 7 destroyed limbs **kept** (torso+head-only design)
+- Wounds kept: internal bleeding (0.9998, 1.2659), 1 bleeding point, 1 stab wound
+- Original joint-break thresholds kept (the human remains fragile)
+- Round 2's accidental healing of these human values is reverted by building round 3 from your original upload
+
 ## Honest caveats
 
 1. **Slice()-based destruction cannot be blocked by save editing.** The Archelix Caster and a fully charged Laser Pointer destroy parts and even Fixed Cables / Strong Springs through a direct `Slice()` call that has no serialized immunity flag. The wires already hold an infinite breaking-force value in the save (so force-based cable breaking was already impossible), but slicing is runtime-only — a small runtime mod would be needed for true slice immunity.
