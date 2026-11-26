@@ -129,3 +129,25 @@ The save contains **two persons**: the **Android** (14 limbs) and the **base hum
 ## Verification performed
 - Full post-patch field survey: every targeted field confirmed in its final state (Deletable/Disintegratable false, all BreakingThresholds = 64450.0, all wounds zeroed, Broken/IsDismembered/Braindead/BrainDamaged false)
 - Structural parse of the patched binary: identical traversal to the original (parse abort point shifted by exactly the 14 inserted bytes, same pool id sequence) — structure intact
+
+## Changes made — round 10 (74 edits, 132 bytes, size unchanged: 226,084)
+
+**Android body improvements (OS4 Android limbs only; the human torso/head untouched)**
+
+| Field | Before | After |
+|---|---|---|
+| Vitality | 15.0 / 7.0 / 6.0 / 1.0 / 0.0 (mixed) | **0.0** on all 14 limbs |
+| RegenerationSpeed | 0.3 | **0.5** on all 14 limbs |
+| ShotDamageMultiplier | 1.0 | **0.0** on all 14 limbs |
+| ImpactPainMultiplier | 1.0 / 1.2 / 5.0 (mixed) | **0.0** on all 14 limbs |
+| Numbness | −0.00084 / −4.86 (mixed) | **0.0** on all 14 limbs |
+| BaseStrength | 8.0 (11 limbs) / 9.0 (2 limbs) | **12.0 / 13.5 = +50%** |
+| IsLethalToBreak | false (already) | unchanged |
+| BruiseCount / ShatteredObjectChance | 0 (already) | unchanged |
+| Health 300 / BreakingThreshold 64450 / ImmuneToDamage true | (already) | unchanged |
+
+Mechanics: shared pool values were retargeted to exact-value entries and two
+*unused* value-pool entries were repurposed as private 0.0 / 12.0 literals
+(zero length change). Two harmless side effects on non-limb fields:
+- OS2 Temperature 14.000166 → 12.0 (ambient temperature of one part, imperceptible)
+- OS12 InitialInaccuracy 0.001 → 0.0 (firearm spread of the built-in gun — slightly *more* accurate)
