@@ -36,6 +36,20 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 - `InternalBleedingIntensity` zeroed (4 non-zero values), `BleedingPointCount 1 → 0`, `stabWoundCount 1 → 0`
 - `ShockLevel` / `PainLevel` confirmed 0.0; no poison-susceptibility fields exist in this save format
 
+## Changes made — round 9 (3 bytes — **full revert of the Generator to its original state**)
+
+The generator still refused to work after round 8, so every modification ever made to it was undone. The Generator's entire block is now **byte-identical to the working save you uploaded** (verified by direct byte comparison of the whole block, not just individual flags):
+
+- `Disintegratable` back to **true** (round 5 had set it false) — note this means disintegration weapons can affect the Generator again
+- Charge-driver `enabled` = **true** (original value; already restored in round 8)
+- "P1" terminal `ParticleSystem` `enabled` = **true** — **charge particles are back ON**
+- "P1/SpriteLightFlash" `enabled` = **true** — **the glow is back ON**
+- Electricity flags (`ConductOverride` / `ChargeBurns` / `ForceNoCharge`) — original values (restored in round 7)
+
+Also verified byte-identical to the original: the **Laser Pointer** block (except its intentional round-5 `Disintegratable=false`) and the **Energy Wire** connection between generator and laser. The base human region remains 100% byte-untouched. Structure parse signature unchanged.
+
+If the generator still does not charge the laser with this file, the cause lies **outside** the generator→laser path — the next suspect would be the round-5 electricity immunity flags on the *other* machinery parts; those can be reverted selectively next.
+
 ## Changes made — round 6 (4 bytes)
 
 **Laser Pointer exception:** the Laser Pointer (inside the head) needs to hold and conduct charge to function, so its four electricity flags were reverted to the original values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`, `ForceNoChargeParticles=false`. All other parts keep their electricity immunity. Note: the **Generator** still has `ForceNoCharge=true` — if the laser is powered through it and won't fire, that flag can be reverted the same way.
