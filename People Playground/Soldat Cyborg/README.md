@@ -40,6 +40,16 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 
 **Laser Pointer exception:** the Laser Pointer (inside the head) needs to hold and conduct charge to function, so its four electricity flags were reverted to the original values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`, `ForceNoChargeParticles=false`. All other parts keep their electricity immunity. Note: the **Generator** still has `ForceNoCharge=true` — if the laser is powered through it and won't fire, that flag can be reverted the same way.
 
+## Changes made — round 8 (2 bytes on top of round 7 — fixes the generator)
+
+**Root cause of the dead generator found (via the game's decompiled source):** round 7 accidentally disabled the wrong component. The `enabled` flag it flipped belongs to the generator's **charge-driver behaviour** (the component holding `Activated`, `TargetCharge=100`, `WarmupProgress`, …), not to a particle emitter. Per the decompiled code, activation (`Use()`) is gated by `enabled` and `OnDisable()` forces `Activated=false` — so with `enabled=false` the generator could never be switched on and supplied no power.
+
+- **Charge-driver `enabled` restored to `true`** (its original value) — the generator starts again (auto-started by its delayed activation event / manual activation, exactly as in the original save)
+- **Particles disabled the correct way:** the actual Unity `ParticleSystem` component on the generator's "P1" terminal (child GameObject, the emitter the driver plays) → `enabled = false`
+- **Glow** (`P1/SpriteLightFlash`) stays disabled from round 7
+- Generator electricity flags remain restored to the original save's values (conduction on)
+- Net change vs round 6: 5 bytes (3 generator electricity flags + particle system off + glow off); file length unchanged; base human still byte-untouched; structure verified intact
+
 ## Changes made — round 7 (5 bytes, file length unchanged)
 
 **Generator: power restored + visuals tamed.** The laser needs the Generator to hold and conduct charge, so its electricity flags were reverted to the original save's values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`. (`ForceNoChargeParticles` was already `true` in the original save — the spark particles were never active on it.)
