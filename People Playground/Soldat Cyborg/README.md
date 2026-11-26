@@ -36,6 +36,10 @@ and load it in-game. Same filename as your original; keep a backup of the origin
 - `InternalBleedingIntensity` zeroed (4 non-zero values), `BleedingPointCount 1 → 0`, `stabWoundCount 1 → 0`
 - `ShockLevel` / `PainLevel` confirmed 0.0; no poison-susceptibility fields exist in this save format
 
+## Changes made — round 6 (4 bytes)
+
+**Laser Pointer exception:** the Laser Pointer (inside the head) needs to hold and conduct charge to function, so its four electricity flags were reverted to the original values: `ConductOverride=true`, `ChargeBurns=true`, `ForceNoCharge=false`, `ForceNoChargeParticles=false`. All other parts keep their electricity immunity. Note: the **Generator** still has `ForceNoCharge=true` — if the laser is powered through it and won't fire, that flag can be reverted the same way.
+
 ## Changes made — round 5 (current, 108 edits, 226,082 → 226,084 bytes)
 
 Rebuilt from the re-sent working save after v3 misbehaved. **Root cause identified:** v3 set `Disintegratable=false` (and originally `Deletable=false`) on ALL 42 parts — including the base human's limbs. Those flags gate the game's crush/disintegrate pathway ("setting it to false will also prevent the object from being disintegrated or crushed"), which interfered with the human's intentionally-destroyed limbs.
